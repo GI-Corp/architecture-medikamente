@@ -1,0 +1,22 @@
+@startuml DFD_Payment
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Кассир" as Cashier
+
+database "ККМ\n(tag: FIN)" as FiscalDevice
+database "1С:Бухгалтерия\n(tag: FIN)" as Accounting1C
+
+rectangle "Ввод данных оплаты" as InputPayment
+rectangle "Фискализация и запись платежа" as ProcessPayment
+
+Patient --> Cashier : Передача данных
+Cashier --> InputPayment : Ввод суммы, выбор услуги
+InputPayment --> ProcessPayment : Отправка на обработку
+
+ProcessPayment --> FiscalDevice : Фискализация чека
+FiscalDevice --> Accounting1C : Перенос данных
+Cashier --> Patient : Выдача чека
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml DFD_Accounting
+left to right direction
+skinparam shadowing false
+
+actor "Бухгалтер" as Accountant
+
+database "1С:Бухгалтерия\n(tag: HR, FIN)" as AccountingDB
+database "Журнал платежей\n(tag: FIN)" as PaymentJournal
+
+rectangle "Начисление ЗП и учёт сотрудников" as HRModule
+rectangle "Обработка финансовых операций" as PaymentModule
+
+Accountant --> HRModule : Данные по сотрудникам
+HRModule --> AccountingDB : Запись кадровых данных
+
+Accountant --> PaymentModule : Запрос на обработку платежей
+PaymentModule --> PaymentJournal : Запись операций
+AccountingDB --> PaymentModule : Сопоставление
+PaymentModule --> Accountant : Результат
+
+@enduml

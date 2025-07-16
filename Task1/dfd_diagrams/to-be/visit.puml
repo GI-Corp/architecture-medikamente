@@ -1,0 +1,21 @@
+@startuml DFD_Visit
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Врач" as Doctor
+
+rectangle "Проверка записи пациента\n(<<RBAC>> <<Audited>> )" as CheckBooking
+rectangle "Проведение приёма и запись диагноза\n(<<SecureInput>> <<Encrypted>> <<Audited>> )" as PerformConsultation
+database "Журнал записей\nExcel\n(tag: PII, <<Encrypted>> )" as BookingList
+database "Файлы пациента\n(tag: PHI, <<Encrypted>> <<RBAC>> )" as MedicalFolder
+
+Patient --> Doctor : Прибытие
+Doctor --> CheckBooking : Проверка записи
+CheckBooking --> BookingList : Чтение
+CheckBooking --> Doctor : OK
+
+Doctor --> PerformConsultation : Осмотр, ввод данных
+PerformConsultation --> MedicalFolder : Сохранение карты
+Doctor --> Patient : Заключение
+@enduml

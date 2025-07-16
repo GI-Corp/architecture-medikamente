@@ -1,0 +1,19 @@
+@startuml DFD_Accounting
+left to right direction
+skinparam shadowing false
+
+actor "Бухгалтер" as Accountant
+
+rectangle "Начисление ЗП и учёт сотрудников\n(<<Encrypted>> <<RBAC>> )" as HRModule
+rectangle "Обработка финансовых операций\n(<<Encrypted>> <<Audited>> )" as PaymentModule
+database "1С:Бухгалтерия\n(tag: HR, FIN, <<Encrypted>> <<RBAC>> )" as AccountingDB
+database "Журнал платежей\n(tag: FIN, <<Encrypted>> <<Audited>> )" as PaymentJournal
+
+Accountant --> HRModule : Данные по сотрудникам
+HRModule --> AccountingDB : Запись кадровых данных
+
+Accountant --> PaymentModule : Запрос на обработку платежей
+PaymentModule --> PaymentJournal : Запись операций
+AccountingDB --> PaymentModule : Сопоставление
+PaymentModule --> Accountant : Результат
+@enduml

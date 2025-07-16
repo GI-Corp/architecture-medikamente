@@ -1,0 +1,25 @@
+@startuml DFD_LabIntegration
+left to right direction
+skinparam shadowing false
+
+actor "Врач" as Doctor
+actor "Пациент" as Patient
+
+rectangle "Формирование запроса на анализ\n(<<SecureInput>> <<Encrypted>> <<Audited>> )" as CreateLabRequest
+database "Файлы пациента\n(tag: PHI, <<Encrypted>> <<RBAC>> )" as PatientFolder
+database "Журнал анализов\n(tag: PHI, <<Encrypted>> <<Audited>> )" as LabJournal
+rectangle "API-Шлюз\n(tag: Secure, Audited, <<OPA Policy>> <<mTLS>> )" as APIGateway
+rectangle "Платформа лаборатории" as ExternalLab #LightGray
+database "Результаты анализов\n(tag: PHI, <<Encrypted>> <<Audited>> )" as LabResults
+
+Doctor --> CreateLabRequest : Назначение анализов
+CreateLabRequest --> PatientFolder : Сохранение назначения
+CreateLabRequest --> APIGateway : Запрос на анализ
+APIGateway --> ExternalLab : Отправка запроса
+
+ExternalLab --> APIGateway : Результаты анализов
+APIGateway --> LabResults : Сохранение результата
+LabResults --> PatientFolder : PDF / Заключение
+Doctor --> LabResults : Получение результатов
+Patient --> LabResults : Просмотр (через ЛК или МП)
+@enduml

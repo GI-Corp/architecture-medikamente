@@ -1,0 +1,21 @@
+@startuml DFD_Booking
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Сотрудник ресепшн" as Receptionist
+
+rectangle "Поиск пациента\n(<<RBAC>> <<Audited>> )" as SearchPatient
+rectangle "Создание записи\n(<<SecureInput>> <<Audited>> )" as CreateBooking
+database "Реестр пациентов\nExcel\n(tag: PII, <<Encrypted>> <<Audited>> )" as PatientRegistry
+database "Журнал записей\nExcel\n(tag: PII, <<Encrypted>> <<Audited>> )" as BookingJournal
+
+Patient --> Receptionist : ФИО, телефон
+Receptionist --> SearchPatient : Найти пациента
+SearchPatient --> PatientRegistry : Чтение данных
+SearchPatient --> Receptionist : Результаты
+
+Receptionist --> CreateBooking : Выбор врача, дата
+CreateBooking --> BookingJournal : Сохранение записи
+CreateBooking --> Receptionist : Подтверждение
+@enduml
