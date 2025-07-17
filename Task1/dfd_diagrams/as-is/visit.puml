@@ -1,0 +1,22 @@
+@startuml DFD_Visit
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Врач" as Doctor
+
+database "Журнал записей\nExcel\n(tag: PII)" as BookingList
+database "Файлы пациента\n(tag: PHI)" as MedicalFolder
+rectangle "Проверка записи пациента" as CheckBooking
+rectangle "Проведение приема и запись диагноза" as PerformConsultation
+
+Patient --> Doctor : Прибытие
+Doctor --> CheckBooking : Проверка записи
+CheckBooking --> BookingList : Чтение
+CheckBooking --> Doctor : OK
+
+Doctor --> PerformConsultation : Осмотр, ввод данных
+PerformConsultation --> MedicalFolder : Сохранение карты
+Doctor --> Patient : Заключение
+
+@enduml

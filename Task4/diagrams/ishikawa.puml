@@ -1,0 +1,80 @@
+@startuml
+skinparam packageStyle rectangle
+left to right direction
+title Диаграмма Исикавы (Узкие места при миграции на микросервисную архитектуру)
+
+rectangle "Узкие места при миграции" as MigrationIssues
+
+' Категории
+rectangle "Инфраструктура" as Infrastructure
+rectangle "Программное обеспечение" as Software
+rectangle "Интеграция" as Integration
+rectangle "Персонал" as Personnel
+rectangle "Процессы" as Processes
+rectangle "Безопасность" as Security
+
+' Инфраструктура
+rectangle "Недостаточная вычислительная мощность" as Compute
+rectangle "Сетевые задержки / потери пакетов" as Network
+rectangle "Ошибки балансировки нагрузки" as LoadBalancer
+rectangle "Неподдерживаемое оборудование (Legacy)" as LegacyHW
+
+Infrastructure <-- Compute
+Infrastructure <-- Network
+Infrastructure <-- LoadBalancer
+Infrastructure <-- LegacyHW
+MigrationIssues <-- Infrastructure : Причина
+
+' Программное обеспечение
+rectangle "Несовместимость API / форматов данных" as APIIssues
+rectangle "Сложность отладки микросервисов" as Debugging
+rectangle "Недостаточное покрытие тестами" as Testing
+rectangle "Отсутствие кат-сценариев (chaos testing)" as ChaosTesting
+
+Software <-- APIIssues
+Software <-- Debugging
+Software <-- Testing
+Software <-- ChaosTesting
+MigrationIssues <-- Software : Причина
+
+' Интеграция
+rectangle "Сложности миграции схем БД" as DBSchema
+rectangle "Задержки в шине сообщений" as QueueDelays
+rectangle "Нарушение целостности данных" as Consistency
+
+Integration <-- DBSchema
+Integration <-- QueueDelays
+Integration <-- Consistency
+MigrationIssues <-- Integration : Причина
+
+' Персонал
+rectangle "Недостаток DevOps-экспертизы" as DevOpsGap
+rectangle "Отсутствие опыта контейнеризации" as ContainerGap
+rectangle "Сопротивление изменениям" as Resistance
+
+Personnel <-- DevOpsGap
+Personnel <-- ContainerGap
+Personnel <-- Resistance
+MigrationIssues <-- Personnel : Причина
+
+' Процессы
+rectangle "Отсутствие CI/CD-процессов" as CICDMissing
+rectangle "Слабый мониторинг и алертинг" as MonitoringGap
+rectangle "Нет плана поэтапной миграции" as MigrationPlan
+
+Processes <-- CICDMissing
+Processes <-- MonitoringGap
+Processes <-- MigrationPlan
+MigrationIssues <-- Processes : Причина
+
+' Безопасность
+rectangle "Устаревшие подходы к авторизации" as AuthLegacy
+rectangle "Отсутствие шифрования in-transit" as NoTLS
+rectangle "Повышенная поверхность атаки (много сервисов)" as AttackSurface
+
+Security <-- AuthLegacy
+Security <-- NoTLS
+Security <-- AttackSurface
+MigrationIssues <-- Security : Причина
+
+@enduml

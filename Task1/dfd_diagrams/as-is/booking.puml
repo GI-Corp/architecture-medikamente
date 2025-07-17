@@ -1,0 +1,22 @@
+@startuml DFD_Booking
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Сотрудник ресепшн" as Receptionist
+
+database "Реестр пациентов\nExcel\n(tag: PII)" as PatientRegistry
+database "Журнал записей\nExcel\n(tag: PII)" as BookingJournal
+rectangle "Поиск пациента" as SearchPatient
+rectangle "Создание записи" as CreateBooking
+
+Patient --> Receptionist : ФИО, телефон
+Receptionist --> SearchPatient : Найти пациента
+SearchPatient --> PatientRegistry : Чтение данных
+SearchPatient --> Receptionist : Результаты
+
+Receptionist --> CreateBooking : Выбор врача, дата
+CreateBooking --> BookingJournal : Сохранение записи
+CreateBooking --> Receptionist : Подтверждение
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml DFD_Registration
+left to right direction
+skinparam shadowing false
+
+actor "Пациент" as Patient
+actor "Сотрудник ресепшн" as Receptionist
+
+rectangle "Форма регистрации пациента\n(tag: PII, PHI, <<SecureInput>> <<Encrypted>> <<Audited>> )" as Form
+rectangle "Обработка формы\nРегистрация\n(<<RBAC>> <<Audited>> )" as Register
+database "Excel-файл пациентов\n(tag: PII, <<Encrypted>> <<Audited>> )" as PatientList
+database "Папка пациента на сетевом диске\n(tag: PHI, <<Encrypted>> <<RBAC>> )" as PatientFolder
+
+Patient --> Form : Ввод данных
+Form --> Receptionist : Заполненные поля
+Receptionist --> Register : Ввод в систему
+Register --> PatientList : Запись в Excel
+Register --> PatientFolder : Создание папки, загрузка файлов
+Register --> Patient : Подтверждение регистрации
+@enduml
